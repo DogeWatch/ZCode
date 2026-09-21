@@ -7,7 +7,7 @@ export const ZCODE_PREVIEW_IDENTITY_ENV = "ZCODE_PREVIEW_IDENTITY";
 
 const PRODUCTION_IDENTITY = Object.freeze({
   flavor: "production",
-  appId: "dev.zcode.app",
+  appId: "dev.qiyicode.app",
   productName: "ZCode",
   linuxExecutableName: "zcode",
   linuxPackageName: "zcode",
@@ -16,7 +16,7 @@ const PRODUCTION_IDENTITY = Object.freeze({
 
 const PREVIEW_IDENTITY = Object.freeze({
   flavor: "preview",
-  appId: "dev.zcode.app.preview",
+  appId: "dev.qiyicode.app.preview",
   productName: "ZCode Preview",
   linuxExecutableName: "zcode-preview",
   linuxPackageName: "zcode-preview",

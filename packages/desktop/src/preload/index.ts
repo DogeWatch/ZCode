@@ -81,7 +81,7 @@ import type {
 import {
   InternalChannels,
   PlatformChannels,
-  formatZCodeRendererProcessName,
+  formatQiyicodeRendererProcessName,
   shouldEnableE2ETestBridge,
 } from "@zcode/shared";
 import { createOAuthCallbackHandler } from "./oauthCallbackBridge.js";
@@ -203,7 +203,7 @@ ipcRenderer.on(PlatformChannels.ShareImport, (_event: unknown, payload: { shareC
 });
 
 function updateRendererProcessTitle(): void {
-  process.title = formatZCodeRendererProcessName(document.title);
+  process.title = formatQiyicodeRendererProcessName(document.title);
 }
 
 function notifyUpdateReadyCallbacks(version: string): void {

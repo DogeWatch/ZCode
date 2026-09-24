@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { PlatformChannels, formatZCodeRendererProcessName } from "@zcode/shared";
+import { PlatformChannels, formatQiyicodeRendererProcessName } from "@zcode/shared";
 import type {
   ResourceUsageSnapshot,
   StorageCleanRequest,
@@ -8,7 +8,7 @@ import type {
   StorageUsageSnapshot,
 } from "@zcode/shared";
 
-process.title = formatZCodeRendererProcessName("Resource Manager");
+process.title = formatQiyicodeRendererProcessName("Resource Manager");
 
 const storage: StorageManagementBridge = {
   startScan: (): Promise<{ jobId: string }> =>

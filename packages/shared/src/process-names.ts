@@ -1,4 +1,6 @@
-const ZCODE_PROCESS_PREFIX = "zcode";
+// 进程名统一使用 qiyicode 品牌前缀（产品要求：ps / 活动监视器中不出现旧名）；
+// 此常量是唯一来源，进程角色识别（如稳定性遥测的 host/agent 判断）也必须引用它。
+export const QIYICODE_PROCESS_NAME_PREFIX = "qiyicode";
 const MAX_PROCESS_NAME_SEGMENT_LENGTH = 24;
 
 function sanitizeProcessNameSegment(value: string | null | undefined): string | null {
@@ -18,11 +20,11 @@ function sanitizeProcessNameSegment(value: string | null | undefined): string | 
   return normalized.slice(0, MAX_PROCESS_NAME_SEGMENT_LENGTH);
 }
 
-function joinZCodeProcessName(...segments: Array<string | null | undefined>): string {
+function joinQiyicodeProcessName(...segments: Array<string | null | undefined>): string {
   const sanitizedSegments = segments
     .map((segment) => sanitizeProcessNameSegment(segment))
     .filter((segment): segment is string => Boolean(segment));
-  return [ZCODE_PROCESS_PREFIX, ...sanitizedSegments].join("-");
+  return [QIYICODE_PROCESS_NAME_PREFIX, ...sanitizedSegments].join("-");
 }
 
 function pickWorkspaceTag(workspacePath: string | null | undefined): string | undefined {
@@ -35,44 +37,44 @@ function pickWorkspaceTag(workspacePath: string | null | undefined): string | un
   return parts.at(-1) ?? trimmedPath;
 }
 
-export function formatZCodeMainProcessName(): string {
-  return joinZCodeProcessName("main");
+export function formatQiyicodeMainProcessName(): string {
+  return joinQiyicodeProcessName("main");
 }
 
-export function formatZCodeGpuProcessName(): string {
-  return joinZCodeProcessName("gpu");
+export function formatQiyicodeGpuProcessName(): string {
+  return joinQiyicodeProcessName("gpu");
 }
 
-export function formatZCodeHostProcessName(label?: string): string {
-  return joinZCodeProcessName("host", label);
+export function formatQiyicodeHostProcessName(label?: string): string {
+  return joinQiyicodeProcessName("host", label);
 }
 
-export function formatZCodeRendererProcessName(windowTitle?: string): string {
+export function formatQiyicodeRendererProcessName(windowTitle?: string): string {
   const normalizedTitle = windowTitle?.trim();
   if (!normalizedTitle || normalizedTitle === "ZCode") {
-    return joinZCodeProcessName("renderer", "main");
+    return joinQiyicodeProcessName("renderer", "main");
   }
 
   if (normalizedTitle === "Resource Manager") {
-    return joinZCodeProcessName("renderer", "resource-manager");
+    return joinQiyicodeProcessName("renderer", "resource-manager");
   }
 
   const remoteWindowPrefix = "ZCode - ";
   if (normalizedTitle.startsWith(remoteWindowPrefix)) {
-    return joinZCodeProcessName(
+    return joinQiyicodeProcessName(
       "renderer",
       "remote",
       normalizedTitle.slice(remoteWindowPrefix.length),
     );
   }
 
-  return joinZCodeProcessName("renderer", normalizedTitle);
+  return joinQiyicodeProcessName("renderer", normalizedTitle);
 }
 
-export function formatZCodeAgentProcessName(provider: string, workspacePath?: string): string {
-  return joinZCodeProcessName("agent", provider, pickWorkspaceTag(workspacePath));
+export function formatQiyicodeAgentProcessName(provider: string, workspacePath?: string): string {
+  return joinQiyicodeProcessName("agent", provider, pickWorkspaceTag(workspacePath));
 }
 
-export function formatZCodeUtilityProcessName(name?: string, type = "utility"): string {
-  return joinZCodeProcessName(type, name);
+export function formatQiyicodeUtilityProcessName(name?: string, type = "utility"): string {
+  return joinQiyicodeProcessName(type, name);
 }

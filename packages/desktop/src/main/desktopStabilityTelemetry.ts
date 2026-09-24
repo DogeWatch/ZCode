@@ -4,6 +4,7 @@ import armsRum from "@arms/rum-electron";
 import { BrowserWindow, type WebContents } from "electron";
 import {
   mapZCodeEnvToArmsRumEnv,
+  QIYICODE_PROCESS_NAME_PREFIX,
   type HostAgentProcessErrorResponse,
   type HostAgentProcessExceptionResponse,
   type HostAgentProcessExitedResponse,
@@ -701,10 +702,11 @@ function mapChildProcessGoneToProcessRoleWithName(
   type: string,
   processName?: string,
 ): StabilityProcessRole {
-  if (processName?.startsWith("zcode-host")) {
+  // 进程名前缀必须与 process-names.ts 的生成规则保持一致，引用共享常量避免改名时漂移。
+  if (processName?.startsWith(`${QIYICODE_PROCESS_NAME_PREFIX}-host`)) {
     return "host";
   }
-  if (processName?.startsWith("zcode-agent")) {
+  if (processName?.startsWith(`${QIYICODE_PROCESS_NAME_PREFIX}-agent`)) {
     return "agent";
   }
   switch (type) {

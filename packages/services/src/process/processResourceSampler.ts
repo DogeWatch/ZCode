@@ -3,7 +3,7 @@ import { readdir, readFile } from "node:fs/promises";
 import { basename } from "node:path";
 import os from "node:os";
 import {
-  formatZCodeAgentProcessName,
+  formatQiyicodeAgentProcessName,
   type HostResourceUsageProcess,
   type ZCodeProcessChildProcess,
 } from "@zcode/shared";
@@ -377,7 +377,7 @@ function ownerToRow(
     return {
       pid: sample.pid,
       name: isOwnerRoot
-        ? formatZCodeAgentProcessName(owner.agent.provider, owner.agent.workspacePath)
+        ? formatQiyicodeAgentProcessName(owner.agent.provider, owner.agent.workspacePath)
         : commandDisplayName(sample.command),
       category: "base",
       groupKey: "cli",

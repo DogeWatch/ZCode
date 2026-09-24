@@ -75,7 +75,7 @@ import {
   HostResponseTypes,
   ZCODE_VERSION,
   formatLogPrefix,
-  formatZCodeHostProcessName,
+  formatQiyicodeHostProcessName,
   formatZodError,
   buildRemoteWorkspaceIdentity,
   buildRemoteEnvironmentKey,
@@ -185,8 +185,8 @@ type RemoteAssetDirs = Pick<
 const { parentPort } = process;
 
 // 进程检索体验优化：host 由 utilityProcess 拉起时外壳仍是 Electron Helper，
-// 这里根据 main 传入的窗口 label 补一层稳定的 zcode-* title，方便系统进程列表过滤。
-process.title = formatZCodeHostProcessName(process.env["ZCODE_PROCESS_LABEL"]);
+// 这里根据 main 传入的窗口 label 补一层稳定的 qiyicode-* title，方便系统进程列表过滤。
+process.title = formatQiyicodeHostProcessName(process.env["ZCODE_PROCESS_LABEL"]);
 
 type HostLogLevel = "info" | "warn" | "error";
 

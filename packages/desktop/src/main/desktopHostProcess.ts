@@ -21,7 +21,7 @@ import {
   type HostMcpTelemetryResponse,
   type HostSessionCreateTelemetryResponse,
   type TaskRealtimeHostDeliveryKind,
-  formatZCodeHostProcessName,
+  formatQiyicodeHostProcessName,
   HostMessageTypes,
   HostResponseTypes,
   hostResponseMessageSchema,
@@ -255,7 +255,7 @@ export function spawnHostProcess(
     "--no-warnings",
   ];
   const child = electronUtilityProcess.fork(hostModulePath, [], {
-    serviceName: formatZCodeHostProcessName(label),
+    serviceName: formatQiyicodeHostProcessName(label),
     execArgv,
     env: {
       ...buildHostProcessEnv(dependencies.hostProcessLocalEnv),

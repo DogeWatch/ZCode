@@ -4,7 +4,7 @@ import {
   TID_CONFIRM_DIALOG_CONFIRM,
   TID_WORKSPACE_CLOSE,
   TID_WORKSPACE_ITEM,
-  formatZCodeAgentProcessName,
+  formatQiyicodeAgentProcessName,
   testId,
 } from "@zcode/shared";
 import {
@@ -88,8 +88,8 @@ describe("workspace removal runtime release E2E", () => {
 });
 
 function buildAgentWorkspaceNameSuffix(workspacePath: string): string {
-  const placeholderPrefix = formatZCodeAgentProcessName("placeholder");
-  const formatted = formatZCodeAgentProcessName("placeholder", workspacePath);
+  const placeholderPrefix = formatQiyicodeAgentProcessName("placeholder");
+  const formatted = formatQiyicodeAgentProcessName("placeholder", workspacePath);
   return formatted.slice(placeholderPrefix.length);
 }
 

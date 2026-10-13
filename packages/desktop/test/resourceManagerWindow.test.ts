@@ -1,9 +1,9 @@
 import {
-  formatZCodeAgentProcessName,
-  formatZCodeGpuProcessName,
-  formatZCodeHostProcessName,
-  formatZCodeRendererProcessName,
-  formatZCodeUtilityProcessName,
+  formatQiyicodeAgentProcessName,
+  formatQiyicodeGpuProcessName,
+  formatQiyicodeHostProcessName,
+  formatQiyicodeRendererProcessName,
+  formatQiyicodeUtilityProcessName,
   HostMessageTypes,
 } from "@zcode/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -119,7 +119,7 @@ describe("resourceManagerWindow", () => {
       const snapshot = await module.buildResourceUsageSnapshot({ includeHosts: false });
       const byPid = new Map(snapshot.processes.map((row) => [row.pid, row]));
       expect(byPid.get(mainPid)).toMatchObject({
-        name: "zcode-main",
+        name: "qiyicode-main",
         category: "base",
         groupKey: "main",
         cpuPercent: 1.2,
@@ -127,19 +127,19 @@ describe("resourceManagerWindow", () => {
         sampled: true,
       });
       expect(byPid.get(gpuPid)).toMatchObject({
-        name: formatZCodeGpuProcessName(),
+        name: formatQiyicodeGpuProcessName(),
         groupKey: "gpu",
       });
       expect(byPid.get(rendererPid)).toMatchObject({
-        name: formatZCodeRendererProcessName("ZCode"),
+        name: formatQiyicodeRendererProcessName("ZCode"),
         groupKey: "renderer",
       });
       expect(byPid.get(hostPid)).toMatchObject({
-        name: formatZCodeHostProcessName("local-1"),
+        name: formatQiyicodeHostProcessName("local-1"),
         groupKey: "host",
       });
       expect(byPid.get(utilityPid)).toMatchObject({
-        name: formatZCodeUtilityProcessName("network-service"),
+        name: formatQiyicodeUtilityProcessName("network-service"),
         groupKey: "utility",
       });
       expect(byPid.get(guestPid)).toMatchObject({
@@ -232,7 +232,7 @@ describe("resourceManagerWindow", () => {
       expect(byPid.get(mcpPid)).toMatchObject({ category: "community-plugin", sampled: true });
       expect(byPid.get(unsampledAgentPid)).toEqual({
         pid: unsampledAgentPid,
-        name: formatZCodeAgentProcessName("glm", "/w/other"),
+        name: formatQiyicodeAgentProcessName("glm", "/w/other"),
         category: "base",
         groupKey: "cli",
         groupLabel: "cli",

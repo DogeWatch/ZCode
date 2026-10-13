@@ -5,8 +5,8 @@ import type {
 
 const HTTPS_DEFAULT_PORT = "443";
 const ROOT_PATH = "/";
+// BigModel 短期项目 Token 在旧 ultra 网关返回 401，保留官方端点直连以匹配新版凭据。
 const GATEWAY_PATH_BY_ENDPOINT: ReadonlyMap<string, string> = new Map([
-  ["https://open.bigmodel.cn:443/api/anthropic/v1/messages", "/api/v1/ultra/anthropic/v1/messages"],
   ["https://api.z.ai:443/api/anthropic/v1/messages", "/api/v1/ultra-zai/anthropic/v1/messages"],
 ]);
 

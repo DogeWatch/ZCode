@@ -29,11 +29,11 @@ bootstrap process registry（endpoint origin + network policy）
 导出只替换该目录，不改公共源码。动态实现的专属测试显式排除，公共 fetch 与静态实现测试两版都保留。
 公共工厂不向上暴露 snapshot、刷新预算或实现 class。网络客户端和来源标识以依赖传入，静态实现不调用它们。
 
-静态实现保持既有开源网关行为：
+静态实现仅保留 Z.AI 网关转发；BigModel 模型端点原样直连：
 
 | 精确匹配的 HTTPS 端点 | 当前 runtime ZCode origin 下的目标路径 |
 | --- | --- |
-| `open.bigmodel.cn/api/anthropic/v1/messages` | `/api/v1/ultra/anthropic/v1/messages` |
+| `open.bigmodel.cn/api/anthropic/v1/messages` | 不改写，直连 BigModel |
 | `api.z.ai/api/anthropic/v1/messages` | `/api/v1/ultra-zai/anthropic/v1/messages` |
 
 默认端口、主机大小写、末尾 `/` 与 query 的处理遵循下文匹配规则；其它协议、端口、路径、子域和
@@ -277,3 +277,9 @@ PER-019—023 与以下动态用例先于实现更新。动态测试继续覆盖
 本功能不改变 conversation 产品状态，不进入 conversation case catalog、coverage matrix 或 formal-proof。
 
 账号 ID 从请求期鉴权材料 `requestAuth.apiKeyId` 显式传入 routing port；禁止从模型 Header、PAT 或手工 Provider Key 推导。手工 Provider 不再传递凭据到配置接口。
+
+## qiyicode BigModel PAT 回归验证
+
+3.14.3 使用长期 API Key，3.15.1 改为短期项目 Token；实测相同 PAT 和请求直连 BigModel 返回 200，经旧 `/api/v1/ultra/anthropic/v1/messages` 返回 401/1002。静态路由不得再把 BigModel 模型请求送入该旧网关。凭据仍由原账号 owner 签发、刷新，禁止回退长期 Key。
+
+验收：BigModel 原始 URL（含 query、大小写主机、默认端口、尾斜线）保持原样；公共 transport 保留鉴权头、body、取消信号和流式响应；Z.AI 路由保持不变。打包后在模型设置执行 GLM-5.3 测试连接，并核对真实模型请求成功。

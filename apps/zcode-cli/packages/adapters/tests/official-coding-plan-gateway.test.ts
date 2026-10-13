@@ -4,16 +4,16 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { createStaticProviderEndpointRoutingPort } from "../src/model/official-coding-plan-gateway.js";
 import { createProviderEndpointRoutingFetch } from "../src/model/provider-endpoint-routing-fetch.js";
 
-const SOURCE = "https://open.bigmodel.cn/api/anthropic/v1/messages";
+const SOURCE = "https://api.z.ai/api/anthropic/v1/messages";
 const ORIGIN = "https://gateway.example.test";
-const TARGET_PATH = "/api/v1/ultra/anthropic/v1/messages";
+const TARGET_PATH = "/api/v1/ultra-zai/anthropic/v1/messages";
 
 afterEach(() => vi.unstubAllGlobals());
 
 describe("static provider endpoint routing", () => {
   it.each([
     [SOURCE, TARGET_PATH],
-    ["https://OPEN.BIGMODEL.CN:443/api/anthropic/v1/messages/", TARGET_PATH],
+    ["https://API.Z.AI:443/api/anthropic/v1/messages/", TARGET_PATH],
     ["https://api.z.ai/api/anthropic/v1/messages", "/api/v1/ultra-zai/anthropic/v1/messages"],
   ])("routes %s with query preserved and no configuration IO", async (source, target) => {
     const network = vi.fn(() => {
@@ -29,6 +29,8 @@ describe("static provider endpoint routing", () => {
   });
 
   it.each([
+    "https://open.bigmodel.cn/api/anthropic/v1/messages",
+    "https://OPEN.BIGMODEL.CN:443/api/anthropic/v1/messages/?stream=true",
     "http://open.bigmodel.cn/api/anthropic/v1/messages",
     "https://open.bigmodel.cn:444/api/anthropic/v1/messages",
     "https://open.bigmodel.cn/api/anthropic/v1/messages/count_tokens",
@@ -51,7 +53,7 @@ describe("static provider endpoint routing", () => {
       body,
       signal: controller.signal,
       headers: {
-        Host: "open.bigmodel.cn",
+        Host: "api.z.ai",
         Authorization: "Bearer example",
         "x-api-key": "example-key",
       },
@@ -108,7 +110,7 @@ describe("static provider endpoint routing", () => {
       const response = await fetch(`${SOURCE}?stream=true`, {
         method: "POST",
         body: "request-body",
-        headers: { Host: "open.bigmodel.cn", Authorization: "Bearer example" },
+        headers: { Host: "api.z.ai", Authorization: "Bearer example" },
       });
       expect(await response.text()).toBe("data: complete\n\n");
       expect(received).toEqual([

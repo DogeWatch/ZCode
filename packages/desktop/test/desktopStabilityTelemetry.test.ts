@@ -23,6 +23,7 @@ vi.mock("@arms/rum-electron", () => ({
 }));
 
 vi.mock("@zcode/shared", () => ({
+  QIYICODE_PROCESS_NAME_PREFIX: "qiyicode",
   mapZCodeEnvToArmsRumEnv: vi.fn(() => "local"),
 }));
 
@@ -296,7 +297,7 @@ describe("desktopStabilityTelemetry", () => {
       type: "Utility",
       reason: "abnormal-exit",
       exitCode: 1,
-      serviceName: "zcode-host-local-1",
+      serviceName: "qiyicode-host-local-1",
       name: "Node Utility Process",
     });
 
@@ -306,7 +307,7 @@ describe("desktopStabilityTelemetry", () => {
       properties: expect.objectContaining({
         crash_scope: "host",
         process_role: "host",
-        process_name: "zcode-host-local-1",
+        process_name: "qiyicode-host-local-1",
       }),
     });
   });
@@ -344,7 +345,7 @@ describe("desktopStabilityTelemetry", () => {
         type: "Utility",
         reason,
         exitCode: 137,
-        serviceName: "zcode-host-local-1",
+        serviceName: "qiyicode-host-local-1",
         name: "Node Utility Process",
       });
 
@@ -396,13 +397,13 @@ describe("desktopStabilityTelemetry", () => {
       const { mapChildProcessGoneToProcessRole, shouldReportChildProcessGoneAsCrash } =
         await import("../src/main/desktopStabilityTelemetry.js");
 
-      expect(mapChildProcessGoneToProcessRole("Utility", "zcode-host-local-1")).toBe("host");
+      expect(mapChildProcessGoneToProcessRole("Utility", "qiyicode-host-local-1")).toBe("host");
       expect(
         shouldReportChildProcessGoneAsCrash({
           type: "Utility",
           reason: "abnormal-exit",
           exitCode: 256,
-          name: "zcode-host-local-1",
+          name: "qiyicode-host-local-1",
         }),
       ).toBe(true);
     });
@@ -416,7 +417,7 @@ describe("desktopStabilityTelemetry", () => {
           type: "Utility",
           reason: "clean-exit",
           exitCode: 0,
-          name: "zcode-host-local-1",
+          name: "qiyicode-host-local-1",
         }),
       ).toBe(false);
     });

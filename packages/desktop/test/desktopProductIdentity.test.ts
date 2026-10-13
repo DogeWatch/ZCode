@@ -25,8 +25,8 @@ describe("desktop product identity", () => {
   it("ZCODE_ENV=test 使用可与生产版并排安装的 Preview 身份", () => {
     expect(resolveDesktopProductIdentity({ ZCODE_ENV: "test" })).toEqual({
       flavor: "preview",
-      appId: "dev.zcode.app.preview",
-      productName: "ZCode Preview",
+      appId: "dev.qiyicode.app.preview",
+      productName: "qiyicode-preview",
       linuxExecutableName: "zcode-preview",
       linuxPackageName: "zcode-preview",
       cuaHelperInstallVariant: "preview",
@@ -80,8 +80,8 @@ describe("desktop product identity", () => {
     );
     expect(desktopProductIdentities.production).toEqual({
       flavor: "production",
-      appId: "dev.zcode.app",
-      productName: "ZCode",
+      appId: "dev.qiyicode.app",
+      productName: "qiyicode",
       linuxExecutableName: "zcode",
       linuxPackageName: "zcode",
       cuaHelperInstallVariant: null,

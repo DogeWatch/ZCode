@@ -63,8 +63,8 @@ export function buildAgentNoProxyEnv(noProxy: string | undefined): Record<string
 }
 
 /**
- * spawn agent 时一次性解析的运行时 env 补丁：代理 + No Proxy + 自定义 CA。
- * 这些值都只来自 AppSettings 显式配置；用户 shell 里的标准代理/证书变量已经在上游清洗。
+ * spawn agent 时一次性解析的运行时 env 补丁：系统 CA + 代理 + No Proxy + 自定义 CA。
+ * 代理和自定义 CA 来自 AppSettings；系统 CA 使用 Node 原生机制，shell 网络变量已在上游清洗。
  */
 export function buildAgentRuntimeEnv(input: {
   httpProxy: string | undefined;
@@ -73,6 +73,8 @@ export function buildAgentRuntimeEnv(input: {
 }): Record<string, string> {
   const proxyEnv = buildAgentProxyEnv(input.httpProxy);
   return {
+    // 企业 CA 已被系统信任时，Node 仍需显式启用系统信任库；TLS 校验继续开启。
+    NODE_USE_SYSTEM_CA: "1",
     ...proxyEnv,
     ...buildAgentNoProxyEnv(input.noProxy),
     ...buildAgentCaCertEnv(input.caCertPath),

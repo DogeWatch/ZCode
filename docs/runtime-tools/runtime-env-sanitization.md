@@ -34,6 +34,8 @@ Before removal, network-related user variables are captured into the ZCode-owned
 
 Desktop app settings remain authoritative for app-managed proxy behavior. When `AppSettings.httpProxy` is configured, services inject `ZCODE_HTTP_PROXY` and the standard proxy variables only into the agent process. When `AppSettings.httpProxyNoProxy` is configured, services inject `ZCODE_NO_PROXY` and the standard no-proxy variables only from that explicit setting. If the app CA exists, services also inject `ZCODE_AGENT_CA_CERT` and `NODE_EXTRA_CA_CERTS` so Node can trust the CA during process startup.
 
+Host 默认在启动 Agent 前注入 Node 原生 `NODE_USE_SYSTEM_CA=1`，使 Node 默认信任库同时使用操作系统已信任的 CA。它不关闭证书链或主机名校验，也不从服务器导入证书。该设置在 Node 进程启动时生效，更新后需重启 Agent；显式配置的额外 CA 仍沿用原有注入路径。
+
 Inside the CLI/agent runtime, standard inherited proxy/CA variables are sanitized again. The provider and HTTP adapter layers read only explicit ZCode network keys or config (`network.httpProxy`, `ZCODE_HTTP_PROXY`, `network.noProxy`, `ZCODE_NO_PROXY`, `network.caCertFile`, `ZCODE_AGENT_CA_CERT`).
 
 Tool subprocess environments are built in a narrower boundary. They start from the sanitized runtime env, expand `ZCODE_TOOL_ENV_PASSTHROUGH_JSON` back to the user's original proxy/CA variable names, then let explicit ZCode network config override the same proxy/CA targets when present.

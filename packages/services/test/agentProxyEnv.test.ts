@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
@@ -69,6 +70,28 @@ describe("buildAgentNoProxyEnv", () => {
 });
 
 describe("buildAgentRuntimeEnv", () => {
+  it("starts Node with operating-system certificate trust enabled", () => {
+    const output = execFileSync(
+      process.execPath,
+      [
+        "-e",
+        `
+        const tls = require("node:tls");
+        const defaults = new Set(tls.getCACertificates("default"));
+        process.stdout.write(JSON.stringify({
+          enabled: process.env.NODE_USE_SYSTEM_CA,
+          trusted: tls.getCACertificates("system").every(cert => defaults.has(cert)),
+        }));
+      `,
+      ],
+      {
+        env: { ...process.env, ...buildAgentRuntimeEnv({ httpProxy: undefined }) },
+        encoding: "utf8",
+      },
+    );
+    expect(JSON.parse(output)).toEqual({ enabled: "1", trusted: true });
+  });
+
   it("merges proxy, no-proxy and the configured CA cert", () => {
     expect(
       buildAgentRuntimeEnv({
@@ -77,6 +100,7 @@ describe("buildAgentRuntimeEnv", () => {
         caCertPath: "/tmp/root-ca.pem",
       }),
     ).toEqual({
+      NODE_USE_SYSTEM_CA: "1",
       HTTP_PROXY: "http://127.0.0.1:7890",
       HTTPS_PROXY: "http://127.0.0.1:7890",
       ALL_PROXY: "http://127.0.0.1:7890",
@@ -89,8 +113,9 @@ describe("buildAgentRuntimeEnv", () => {
     });
   });
 
-  it("injects no CA when the setting is empty, even if proxy is configured", () => {
+  it("injects no custom CA when the setting is empty, even if proxy is configured", () => {
     expect(buildAgentRuntimeEnv({ httpProxy: "http://127.0.0.1:7890" })).toEqual({
+      NODE_USE_SYSTEM_CA: "1",
       HTTP_PROXY: "http://127.0.0.1:7890",
       HTTPS_PROXY: "http://127.0.0.1:7890",
       ALL_PROXY: "http://127.0.0.1:7890",
@@ -102,6 +127,7 @@ describe("buildAgentRuntimeEnv", () => {
     expect(
       buildAgentRuntimeEnv({ httpProxy: undefined, caCertPath: " /tmp/root-ca.pem " }),
     ).toEqual({
+      NODE_USE_SYSTEM_CA: "1",
       NODE_EXTRA_CA_CERTS: "/tmp/root-ca.pem",
       ZCODE_AGENT_CA_CERT: "/tmp/root-ca.pem",
     });
